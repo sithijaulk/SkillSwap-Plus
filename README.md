@@ -175,4 +175,4 @@ ISC
 
 ---
 
-Built with ❤️ for university students
+Built with Group members for university students
