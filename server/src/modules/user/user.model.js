@@ -1,0 +1,164 @@
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('../../config');
+
+const userSchema = new mongoose.Schema({
+    // Basic Information
+    firstName: {
+        type: String,
+        required: [true, 'First name is required'],
+        trim: true,
+        maxlength: [50, 'First name cannot exceed 50 characters']
+    },
+    lastName: {
+        type: String,
+        required: [true, 'Last name is required'],
+        trim: true,
+        maxlength: [50, 'Last name cannot exceed 50 characters']
+    },
+    email: {
+        type: String,
+        required: [true, 'Email is required'],
+        unique: true,
+        lowercase: true,
+        trim: true,
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please provide a valid email']
+    },
+    password: {
+        type: String,
+        required: [true, 'Password is required'],
+        minlength: [6, 'Password must be at least 6 characters'],
+        select: false
+    },
+
+    // Role and Status
+    role: {
+        type: String,
+        enum: ['learner', 'mentor', 'admin'],
+        default: 'learner'
+    },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+
+    // Profile Information
+    profileImage: {
+        type: String,
+        default: null
+    },
+    bio: {
+        type: String,
+        maxlength: [500, 'Bio cannot exceed 500 characters'],
+        default: ''
+    },
+    university: {
+        type: String,
+        default: ''
+    },
+    department: {
+        type: String,
+        default: ''
+    },
+    yearOfStudy: {
+        type: Number,
+        min: 1,
+        max: 6
+    },
+
+    // Contact Information
+    phone: {
+        type: String,
+        default: null
+    },
+
+    // Mentor-specific fields
+    skills: [{
+        name: {
+            type: String,
+            required: true
+        },
+        category: {
+            type: String,
+            enum: ['programming', 'languages', 'mathematics', 'science', 'arts', 'music', 'sports', 'other'],
+            default: 'other'
+        },
+        proficiencyLevel: {
+            type: String,
+            enum: ['beginner', 'intermediate', 'advanced', 'expert'],
+            default: 'intermediate'
+        },
+        description: {
+            type: String,
+            maxlength: 200
+        }
+    }],
+    hourlyRate: {
+        type: Number,
+        default: 0,
+        min: [0, 'Hourly rate cannot be negative']
+    },
+    totalSessions: {
+        type: Number,
+        default: 0
+    },
+
+    // Reputation and Quality Metrics
+    averageRating: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 5
+    },
+    totalRatings: {
+        type: Number,
+        default: 0
+    },
+    reputationScore: {
+        type: Number,
+        default: 0
+    }
+}, {
+    timestamps: true
+});
+
+// Hash password before saving
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) {
+        return next();
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+});
+
+// Compare password method
+userSchema.methods.comparePassword = async function (candidatePassword) {
+    return await bcrypt.compare(candidatePassword, this.password);
+};
+
+// Generate JWT token
+userSchema.methods.generateAuthToken = function () {
+    return jwt.sign(
+        { userId: this._id, role: this.role },
+        config.JWT_SECRET,
+        { expiresIn: config.JWT_EXPIRE }
+    );
+};
+
+// Get public profile (exclude sensitive data)
+userSchema.methods.getPublicProfile = function () {
+    const user = this.toObject();
+    delete user.password;
+    return user;
+};
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
