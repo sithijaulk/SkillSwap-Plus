@@ -65,30 +65,6 @@ cd skillswap-plus
 2. Install all dependencies
 ```bash
 npm run install-all
-```
-
-3. Set up environment variables
-```bash
-# Copy the example file
-cp .env.example server/.env
-
-# Edit server/.env with your configuration
-```
-
-4. Start MongoDB (if running locally)
-```bash
-mongod
-```
-
-5. Run the application
-```bash
-# Development mode (both frontend and backend)
-npm run dev
-
-# Or run separately:
-npm run server    # Backend only (port 5000)
-npm run client    # Frontend only (port 3000)
-```
 
 ## 🔑 Default Admin Credentials
 
