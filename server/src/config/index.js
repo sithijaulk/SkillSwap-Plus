@@ -3,7 +3,8 @@ require('dotenv').config();
 module.exports = {
     // Server Configuration
     NODE_ENV: process.env.NODE_ENV || 'development',
-    PORT: process.env.PORT || 5000,
+    // use 5001 by default because macOS often reserves 5000 for system services
+    PORT: process.env.PORT || 5001,
 
     // Database
     MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/skillswap-plus',

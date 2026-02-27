@@ -57,15 +57,27 @@ const seedData = async () => {
             skills: [
                 {
                     name: 'JavaScript',
-                    category: 'programming',
-                    proficiencyLevel: 'expert',
-                    description: 'Full-stack JavaScript development'
+                    category: 'Web Development',
+                    level: 'Advanced',
+                    description: 'Full-stack JavaScript development',
+                    tags: ['javascript', 'frontend', 'backend'],
+                    hourlyRate: 20
                 },
                 {
                     name: 'Python',
-                    category: 'programming',
-                    proficiencyLevel: 'advanced',
-                    description: 'Python for data science and web development'
+                    category: 'Programming',
+                    level: 'Intermediate',
+                    description: 'Python for data science and web development',
+                    tags: ['python', 'data'],
+                    hourlyRate: 18
+                },
+                {
+                    name: 'React',
+                    category: 'Web Development',
+                    level: 'Intermediate',
+                    description: 'React / hooks / SPA development',
+                    tags: ['react', 'frontend'],
+                    hourlyRate: 22
                 }
             ],
             hourlyRate: 15

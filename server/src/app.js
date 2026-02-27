@@ -23,11 +23,30 @@ const app = express();
 // Security middleware
 app.use(helmet());
 
-// CORS configuration
-app.use(cors({
-    origin: config.CLIENT_URL,
+// CORS configuration - allow requests from client URL and handle preflight
+const corsOptions = {
+    origin: function(origin, callback) {
+        // Allow requests from localhost on any port in development
+        if (process.env.NODE_ENV === 'development') {
+            if (!origin || origin.includes('localhost') || origin.includes('127.0.0.1')) {
+                callback(null, true);
+            } else {
+                callback(new Error('CORS not allowed'));
+            }
+        } else {
+            // In production, use the specific CLIENT_URL
+            if (origin === config.CLIENT_URL || !origin) {
+                callback(null, true);
+            } else {
+                callback(new Error('CORS not allowed'));
+            }
+        }
+    },
     credentials: true
-}));
+};
+app.use(cors(corsOptions));
+// explicitly enable preflight for all routes
+app.options('*', cors(corsOptions));
 
 // Body parser
 app.use(express.json());

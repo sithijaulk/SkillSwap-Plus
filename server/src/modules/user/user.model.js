@@ -81,22 +81,34 @@ const userSchema = new mongoose.Schema({
     skills: [{
         name: {
             type: String,
-            required: true
+            required: [true, 'Skill name is required'],
+            trim: true,
+            minlength: [2, 'Skill name must be at least 2 characters'],
+            maxlength: [50, 'Skill name cannot exceed 50 characters']
         },
         category: {
             type: String,
-            enum: ['programming', 'languages', 'mathematics', 'science', 'arts', 'music', 'sports', 'other'],
-            default: 'other'
+            trim: true,
+            default: 'General'
         },
-        proficiencyLevel: {
+        level: {
             type: String,
-            enum: ['beginner', 'intermediate', 'advanced', 'expert'],
-            default: 'intermediate'
+            enum: ['Beginner', 'Intermediate', 'Advanced'],
+            default: 'Intermediate'
         },
         description: {
             type: String,
-            maxlength: 200
-        }
+            maxlength: [500, 'Description cannot exceed 500 characters'],
+            default: ''
+        },
+        hourlyRate: {
+            type: Number,
+            min: [0, 'Hourly rate cannot be negative'],
+            default: 0
+        },
+        tags: [{ type: String, trim: true }],
+        isActive: { type: Boolean, default: true },
+        createdAt: { type: Date, default: Date.now }
     }],
     hourlyRate: {
         type: Number,

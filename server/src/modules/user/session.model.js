@@ -41,10 +41,16 @@ const sessionSchema = new mongoose.Schema({
         max: [240, 'Maximum duration is 4 hours']
     },
 
-    // Session Status
+    // Session Type and Status
+    sessionType: {
+        type: String,
+        enum: ['skill_exchange', 'paid'],
+        required: [true, 'Session type is required'],
+        default: 'skill_exchange'
+    },
     status: {
         type: String,
-        enum: ['pending', 'confirmed', 'in-progress', 'completed', 'cancelled', 'disputed'],
+        enum: ['pending', 'accepted', 'scheduled', 'in-progress', 'completed', 'cancelled', 'disputed'],
         default: 'pending'
     },
 
