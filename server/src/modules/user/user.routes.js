@@ -54,6 +54,29 @@ router.get('/users/stats', auth, userController.getUserStats);
 
 /**
  * ===========================
+ * MENTOR SKILLS (mentor-only)
+ * ===========================
+ */
+
+// Get my skills
+router.get('/mentors/me/skills', auth, isMentor, userController.getMySkills);
+
+// Add a new skill
+router.post('/mentors/me/skills', auth, isMentor, userController.addMySkill);
+
+// Update a skill
+router.put('/mentors/me/skills/:skillId', auth, isMentor, userController.updateMySkill);
+
+// Delete a skill
+router.delete('/mentors/me/skills/:skillId', auth, isMentor, userController.deleteMySkill);
+
+/**
+ * Public skills listing
+ */
+router.get('/skills', userController.getPublicSkills);
+
+/**
+ * ===========================
  * SESSION ROUTES
  * ===========================
  */

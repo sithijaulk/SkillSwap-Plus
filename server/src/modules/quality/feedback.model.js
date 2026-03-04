@@ -58,6 +58,36 @@ const feedbackSchema = new mongoose.Schema({
         default: 'neutral'
     },
 
+    // Feedback Tags for categorization
+    tags: [{
+        type: String,
+        enum: [
+            'clear-explanations',
+            'on-time',
+            'patient',
+            'professional',
+            'well-prepared',
+            'engaging',
+            'needs-improvement',
+            'unclear-explanations',
+            'late',
+            'rushed',
+            'unprepared',
+            'dismissive'
+        ]
+    }],
+
+    // Completion Verification
+    isSessionCompleted: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    completionVerifiedAt: {
+        type: Date,
+        default: null
+    },
+
     // Status
     isPrivate: {
         type: Boolean,

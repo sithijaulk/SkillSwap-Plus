@@ -169,6 +169,77 @@ exports.updateSkills = async (req, res, next) => {
 };
 
 /**
+ * @route   GET /api/mentors/me/skills
+ * @desc    Get logged-in mentor's skills
+ * @access  Private (mentor)
+ */
+exports.getMySkills = async (req, res, next) => {
+    try {
+        const skills = await userService.getMySkills(req.user._id);
+        res.json({ success: true, data: skills });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * @route   POST /api/mentors/me/skills
+ * @desc    Add a new skill for logged-in mentor
+ * @access  Private (mentor)
+ */
+exports.addMySkill = async (req, res, next) => {
+    try {
+        const skill = await userService.addSkill(req.user._id, req.body);
+        res.status(201).json({ success: true, data: skill, message: 'Skill added' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * @route   PUT /api/mentors/me/skills/:skillId
+ * @desc    Update a mentor skill
+ * @access  Private (mentor)
+ */
+exports.updateMySkill = async (req, res, next) => {
+    try {
+        const skill = await userService.updateSkill(req.user._id, req.params.skillId, req.body);
+        res.json({ success: true, data: skill, message: 'Skill updated' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * @route   DELETE /api/mentors/me/skills/:skillId
+ * @desc    Delete a mentor skill
+ * @access  Private (mentor)
+ */
+exports.deleteMySkill = async (req, res, next) => {
+    try {
+        await userService.deleteSkill(req.user._id, req.params.skillId);
+        res.json({ success: true, message: 'Skill deleted' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * @route   GET /api/skills
+ * @desc    Public list of skills across mentors
+ * @access  Public
+ */
+exports.getPublicSkills = async (req, res, next) => {
+    try {
+        const { search, category, level, page, limit, sort } = req.query;
+        const skills = await userService.getPublicSkills({ search, category, level, page, limit, sort });
+        res.json({ success: true, count: skills.length, data: skills });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
  * @route   GET /api/users/stats
  * @desc    Get user statistics
  * @access  Private
