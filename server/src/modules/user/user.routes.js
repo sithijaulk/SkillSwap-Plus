@@ -114,4 +114,14 @@ router.delete('/availability/:id', auth, isMentor, availabilityController.delete
 // Get available slots for date
 router.get('/availability/slots/:mentorId/:date', availabilityController.getAvailableSlots);
 
+/**
+ * ===========================
+ * SKILL ROUTES
+ * ===========================
+ */
+const skillController = require('./skill.controller');
+router.post('/skills', auth, isMentor, skillController.createSkill);
+router.get('/skills/public', skillController.getSkills);
+router.get('/skills/my', auth, isMentor, skillController.getMySkills);
+
 module.exports = router;

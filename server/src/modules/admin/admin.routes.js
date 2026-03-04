@@ -3,7 +3,7 @@ const router = express.Router();
 const { body } = require('express-validator');
 const adminController = require('./admin.controller');
 const auth = require('../../middleware/auth.middleware');
-const { isAdmin } = require('../../middleware/role.middleware');
+const { isAdmin, isLearner } = require('../../middleware/role.middleware');
 
 /**
  * ===========================
@@ -70,5 +70,13 @@ router.get('/stats', auth, isAdmin, adminController.getStats);
 
 // Get recent activities
 router.get('/activities', auth, isAdmin, adminController.getActivities);
+
+const financeController = require('./finance.controller');
+
+// Finance stats
+router.get('/finance/stats', auth, isAdmin, financeController.getFinanceStats);
+
+// Process payment (Learner role but under finance logic)
+router.post('/finance/pay', auth, isLearner, financeController.processPayment);
 
 module.exports = router;

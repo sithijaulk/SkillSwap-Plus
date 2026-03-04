@@ -40,6 +40,11 @@ const isLearner = authorize('learner');
 const isMentor = authorize('mentor');
 
 /**
+ * Check if user is a professional
+ */
+const isProfessional = authorize('professional');
+
+/**
  * Check if user is an admin
  */
 const isAdmin = authorize('admin');
@@ -58,6 +63,7 @@ module.exports = {
     authorize,
     isLearner,
     isMentor,
+    isProfessional,
     isAdmin,
     isLearnerOrMentor,
     isMentorOrAdmin
